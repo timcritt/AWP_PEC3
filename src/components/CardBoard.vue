@@ -1,23 +1,34 @@
 <script>
-import ShowCard from './ShowCard.vue';
+import ShowCard from "./ShowCard.vue";
 
 export default {
-	name: 'CardBoard',
+	name: "CardBoard",
 	components: {
-		ShowCard
+		ShowCard,
 	},
 	props: {
 		showList: {
 			type: Array,
-			required: true
-		}
-	}
-}
+			required: true,
+		},
+	},
+	emits: { deleteShow: (id) => typeof id === "number" },
+	methods: {
+		onDeleteShow(id) {
+			this.$emit("deleteShow", id);
+		},
+	},
+};
 </script>
 
 <template>
 	<section class="board">
-		<ShowCard v-for="show in showList" :key="show.id" :show="show" />
+		<ShowCard
+			v-for="show in showList"
+			:key="show.id"
+			:show="show"
+			@delete-show="onDeleteShow"
+		/>
 	</section>
 </template>
 

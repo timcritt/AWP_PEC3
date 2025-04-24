@@ -1,146 +1,156 @@
 <script>
 export default {
-  name: 'ShowCard',
-  props: {
-    show: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    rating() {
-      return Math.round(this.show.rating);
-    }
-  }
-}
+	name: "ShowCard",
+	props: {
+		show: {
+			type: Object,
+			required: true,
+		},
+	},
+	computed: {
+		rating() {
+			return Math.round(this.show.rating);
+		},
+	},
+	emits: { deleteShow: (id) => typeof id === "string" },
+	methods: {
+		handleDeleteShow() {
+			this.$emit("deleteShow", this.show.id);
+		},
+	},
+};
 </script>
 
 <template>
-  <article class="card" :style="{ borderColor: show.color }">
-    <button class="delete-btn">
-      <img src="/src/assets/delete.svg" alt="Delete" />
-    </button>
-    <img class="cover" :src="show.image" :alt="show.title" />
-    <div class="info">
-      <h2 class="info__title">{{ show.title }}</h2>
-      <p class="info__description">{{ show.description }}</p>
-      <time class="info__year">{{ new Date(show.releaseDate).getFullYear() }}</time>
-      <ul class="info__tags">
-        <li v-for="tag in show.tags" :key="tag">{{ tag }}</li>
-      </ul>
-      <p class="info__notes">Note: {{ show.notes }}</p>
-      <p class="info__stars">
-        <span v-for="star in 5" :class="{ 'full-star': star <= rating }">★</span>
-      </p>
-    </div>
-  </article>
+	<article class="card" :style="{ borderColor: show.color }">
+		<button class="delete-btn" @click="handleDeleteShow">
+			<img src="/src/assets/delete.svg" alt="Delete" />
+		</button>
+		<img class="cover" :src="show.image" :alt="show.title" />
+		<div class="info">
+			<h2 class="info__title">{{ show.title }}</h2>
+			<p class="info__description">{{ show.description }}</p>
+			<time class="info__year">{{
+				new Date(show.releaseDate).getFullYear()
+			}}</time>
+			<ul class="info__tags">
+				<li v-for="tag in show.tags" :key="tag">{{ tag }}</li>
+			</ul>
+			<p class="info__notes">Note: {{ show.notes }}</p>
+			<p class="info__stars">
+				<span v-for="star in 5" :class="{ 'full-star': star <= rating }"
+					>★</span
+				>
+			</p>
+		</div>
+	</article>
 </template>
 
 <style scoped>
 /* General styles */
 .card {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  color: rgb(41, 38, 38);
-  border-top: 10px outset;
-  position: relative;
-  box-shadow: 10px 10px 11px -6px rgba(0, 0, 0, 0.12);
-  height: 270px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 10px;
+	padding: 10px;
+	border-radius: 5px;
+	color: rgb(41, 38, 38);
+	border-top: 10px outset;
+	position: relative;
+	box-shadow: 10px 10px 11px -6px rgba(0, 0, 0, 0.12);
+	height: 270px;
 }
 
 /* Image */
 .cover {
-  flex: 25% 0 0;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
+	flex: 25% 0 0;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 5px;
 }
 
 /* Delete button */
 .delete-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: white;
-  cursor: pointer;
-  background-color: transparent;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-block: 0px;
-  padding-inline: 0px;
-  border: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: white;
+	cursor: pointer;
+	background-color: transparent;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-block: 0px;
+	padding-inline: 0px;
+	border: none;
 }
 
 /* Info */
 .info__title {
-  font-size: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  height: 40px;
-  overflow: hidden;
+	font-size: 1rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	height: 40px;
+	overflow: hidden;
 }
 
 .info__description {
-  font-size: 0.8rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  height: 60px;
-  overflow: hidden;
+	font-size: 0.8rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	height: 60px;
+	overflow: hidden;
 }
 
 .info__year {
-  font-size: 0.7rem;
-  color: #5c5c5c;
+	font-size: 0.7rem;
+	color: #5c5c5c;
 }
 
 .info__tags {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  list-style: none;
-  flex-wrap: wrap;
-  padding: 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  padding-inline-start: 0;
-  height: 50px;
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	list-style: none;
+	flex-wrap: wrap;
+	padding: 0;
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: 0;
+	height: 50px;
 }
 
 .info__tags li {
-  font-size: 0.6rem;
-  background-color: rgba(0, 0, 0, 0.15);
-  padding: 2px 4px;
-  border-radius: 10px;
-  height: 15px;
-  display: flex;
-  align-items: center;
+	font-size: 0.6rem;
+	background-color: rgba(0, 0, 0, 0.15);
+	padding: 2px 4px;
+	border-radius: 10px;
+	height: 15px;
+	display: flex;
+	align-items: center;
 }
 
 .info__notes {
-  font-size: 0.65rem;
-  font-style: italic;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  height: 50px;
-  color: rgb(92, 92, 92);
+	font-size: 0.65rem;
+	font-style: italic;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	height: 50px;
+	color: rgb(92, 92, 92);
 }
 
 /* Stars */
 .full-star {
-  color: gold;
+	color: gold;
 }
 </style>

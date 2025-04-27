@@ -14,6 +14,13 @@ export default {
 		return {
 			myName: "Timothy Crittenden",
 			cardFormVisible: false,
+			filters: {
+				searchTerm: "",
+				selectedTag: "",
+				minRating: 0,
+				sortBy: "name",
+				sortOrder: "asc",
+			},
 			showList: [
 				{
 					id: 1,
@@ -94,6 +101,57 @@ export default {
 			});
 			return Array.from(tags);
 		},
+		filteredShows() {
+			//Create a copy of the showList to avoid direct mutation
+			let filterResult = [...this.showList];
+
+			// Apply filter by name
+			if (this.filters.searchTerm) {
+				//ignore trailing white space and differences in case
+				const term = this.filters.searchTerm.trim().toLowerCase();
+				filterResult = filterResult.filter((show) => {
+					console.log(show.title.toLowerCase(), term);
+					return show.title.toLowerCase().includes(term);
+				});
+			}
+
+			if (this.filters.selectedTag) {
+				filterResult = filterResult.filter((show) =>
+					show.tags.includes(this.filters.selectedTag)
+				);
+			}
+
+			if (this.filters.minRating) {
+				filterResult = filterResult.filter(
+					(show) => show.rating >= this.filters.minRating
+				);
+			}
+
+			// Sort the shows based on the selected criteria
+			if (this.filters.sortBy) {
+				filterResult.sort((a, b) => {
+					if (this.filters.sortBy === "rating") {
+						return this.filters.sortOrder === "asc"
+							? a.rating - b.rating
+							: b.rating - a.rating;
+					}
+
+					if (this.filters.sortBy === "date") {
+						return this.filters.sortOrder === "asc"
+							? new Date(a.releaseDate) - new Date(b.releaseDate)
+							: new Date(b.releaseDate) - new Date(a.releaseDate);
+					}
+
+					if (this.filters.sortBy === "name") {
+						return this.filters.sortOrder === "asc"
+							? a.title.localeCompare(b.title)
+							: b.title.localeCompare(a.title);
+					}
+				});
+			}
+
+			return filterResult;
+		},
 	},
 	methods: {
 		performDeleteShow(id) {
@@ -111,6 +169,9 @@ export default {
 		performHideCardForm() {
 			this.cardFormVisible = false;
 		},
+		updateFilters(newFilters) {
+			this.filters = { ...this.filters, ...newFilters };
+		},
 	},
 };
 </script>
@@ -125,13 +186,14 @@ export default {
 	<main class="main">
 		<FilterBar
 			@show-card-form="performShowCardForm"
+			@inputs-updated="updateFilters"
 			:card-form-visible="cardFormVisible"
 			:tags="uniqueTags"
 		/>
 		<div class="shows-container">
 			<CardBoard
 				class="shows-container__board"
-				:show-list="showList"
+				:show-list="filteredShows"
 				@delete-show="performDeleteShow"
 			/>
 			<CardForm

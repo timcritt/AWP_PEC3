@@ -5,6 +5,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		tags: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	name: "FilterBar",
 	emits: ["showCardForm"],
@@ -33,10 +37,7 @@ export default {
 			<div class="input-group">
 				<label for="tag-filter">Tag</label>
 				<select id="tag-filter">
-					<option value="drama">Drama</option>
-					<option value="crime">Crime</option>
-					<option value="family">Fantasy</option>
-					<option value="rating">Action</option>
+					<option v-for="tag in tags" :key="tag" :value="tag">{{ tag }}</option>
 				</select>
 			</div>
 			<div class="input-group">

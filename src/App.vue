@@ -83,6 +83,18 @@ export default {
 			],
 		};
 	},
+	computed: {
+		uniqueTags() {
+			//using a set guarantees that stored tags are not duplicated
+			const tags = new Set();
+			this.showList.forEach((show) => {
+				show.tags.forEach((tag) => {
+					tags.add(tag);
+				});
+			});
+			return Array.from(tags);
+		},
+	},
 	methods: {
 		performDeleteShow(id) {
 			this.showList = this.showList.filter((show) => show.id !== id);
@@ -114,6 +126,7 @@ export default {
 		<FilterBar
 			@show-card-form="performShowCardForm"
 			:card-form-visible="cardFormVisible"
+			:tags="uniqueTags"
 		/>
 		<div class="shows-container">
 			<CardBoard

@@ -111,15 +111,16 @@ export default {
 			//Create a copy of the showList to avoid direct mutation of reactive properties
 			let filterResult = [...this.showList];
 
-			// // Check if the search term is in the title, description, or notes
+			// // Check if the search term is in the title, description, or tags
 			if (this.filters.searchTerm) {
 				//ignore trailing white space and differences in case
 				const term = this.filters.searchTerm.trim().toLowerCase();
 				filterResult = filterResult.filter((show) => {
+					//Returns as soon as one of the conditions is true, avoiding unnecessary checks
 					return (
 						show.title.toLowerCase().includes(term) ||
 						show.description.toLowerCase().includes(term) ||
-						show.notes.toLowerCase().includes(term)
+						show.tags.some((tag) => tag.toLowerCase().includes(term))
 					);
 				});
 			}

@@ -92,13 +92,14 @@ export default {
 	},
 	computed: {
 		//Using a computed value means that uniqueTags list will be recalculated when its dependencies change.
-		// i.e., when a show is added or removed to showList
+		// i.e., when a show is added to or removed from showList
 		uniqueTags() {
 			//using a set guarantees that stored tags are not duplicated
+			//It is also efficient as it uses hashing for checking if value already exists
 			const tags = new Set();
 			//Loop over every show
 			this.showList.forEach((show) => {
-				//Loop oer every tag
+				//Loop over every tag
 				show.tags.forEach((tag) => {
 					tags.add(tag);
 				});
@@ -180,7 +181,7 @@ export default {
 			this.cardFormVisible = false;
 		},
 		updateFilters(newFilters) {
-			this.filters = { ...this.filters, ...newFilters };
+			this.filters = { ...newFilters };
 		},
 	},
 };

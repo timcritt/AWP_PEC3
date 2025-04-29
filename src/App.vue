@@ -91,36 +91,46 @@ export default {
 		};
 	},
 	computed: {
+		//Using a computed value means that uniqueTags list will be recalculated when its dependencies change.
+		// i.e., when a show is added or removed to showList
 		uniqueTags() {
 			//using a set guarantees that stored tags are not duplicated
 			const tags = new Set();
+			//Loop over every show
 			this.showList.forEach((show) => {
+				//Loop oer every tag
 				show.tags.forEach((tag) => {
 					tags.add(tag);
 				});
 			});
+			//Cast the set to an array
 			return Array.from(tags);
 		},
 		filteredShows() {
-			//Create a copy of the showList to avoid direct mutation
+			//Create a copy of the showList to avoid direct mutation of reactive properties
 			let filterResult = [...this.showList];
 
-			// Apply filter by name
+			// // Check if the search term is in the title, description, or notes
 			if (this.filters.searchTerm) {
 				//ignore trailing white space and differences in case
 				const term = this.filters.searchTerm.trim().toLowerCase();
 				filterResult = filterResult.filter((show) => {
-					console.log(show.title.toLowerCase(), term);
-					return show.title.toLowerCase().includes(term);
+					return (
+						show.title.toLowerCase().includes(term) ||
+						show.description.toLowerCase().includes(term) ||
+						show.notes.toLowerCase().includes(term)
+					);
 				});
 			}
 
+			// Apply filter by tag
 			if (this.filters.selectedTag) {
 				filterResult = filterResult.filter((show) =>
 					show.tags.includes(this.filters.selectedTag)
 				);
 			}
 
+			// Apply filter by rating
 			if (this.filters.minRating) {
 				filterResult = filterResult.filter(
 					(show) => show.rating >= this.filters.minRating
@@ -136,7 +146,7 @@ export default {
 							: b.rating - a.rating;
 					}
 
-					if (this.filters.sortBy === "date") {
+					if (this.filters.sortBy === "release") {
 						return this.filters.sortOrder === "asc"
 							? new Date(a.releaseDate) - new Date(b.releaseDate)
 							: new Date(b.releaseDate) - new Date(a.releaseDate);

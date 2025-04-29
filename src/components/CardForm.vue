@@ -38,7 +38,7 @@ export default {
 		},
 		validateFormFields() {
 			const s = this.show;
-			// Only check for non-empty strings and arrays for properties specified in the PEC
+			// Only check for empty strings and arrays for properties specified in the PEC
 			return (
 				s.title.length > 0 &&
 				s.description.length > 0 &&

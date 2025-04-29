@@ -12,7 +12,7 @@ export default {
 			return Math.round(this.show.rating);
 		},
 	},
-	emits: { deleteShow: (id) => typeof id === "string" },
+	emits: { deleteShow: (id) => typeof id === "number" },
 	methods: {
 		handleDeleteShow() {
 			this.$emit("deleteShow", this.show.id);

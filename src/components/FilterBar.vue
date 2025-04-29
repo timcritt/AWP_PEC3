@@ -11,12 +11,21 @@ export default {
 		},
 	},
 	name: "FilterBar",
-	emits: ["showCardForm", "inputsUpdated"],
+	emits: {
+		showCardForm: () => true,
+		inputsUpdated: (inputs) =>
+			typeof inputs === "object" &&
+			typeof inputs.searchTerm === "string" &&
+			typeof inputs.selectedTag === "string" &&
+			typeof inputs.sortBy === "string" &&
+			typeof inputs.sortOrder === "string" &&
+			typeof inputs.minRating === "number",
+	},
 	data() {
 		return {
 			// Defining the input values as nested properties of an object allows setting a single watcher on all inputs.
 			// Due to their interdependcy, all filters must be applied to the unfiltered (full) list of shows everytime one of them changes,
-			// so using a single watcher means less code duplication and easier extension in the future. You only need to add the new input
+			// so using a single watcher means less code duplication and easier extension in the future: you only need to add the new input
 			// to the inputs object, connect it to the new input element with v-model, and the watcher will handle changes.
 			inputs: {
 				searchTerm: "",
@@ -34,7 +43,6 @@ export default {
 			handler(newInputs) {
 				// Emit a copy of the inputs object to avoid mutating the original object in the parent component.
 				this.$emit("inputsUpdated", { ...newInputs });
-				console.log("Inputs updated:", newInputs);
 			},
 			deep: true,
 		},
@@ -80,20 +88,21 @@ export default {
 			</div>
 			<div class="input-group">
 				<label for="rating-filter">Min rating</label>
+				<!-- v-model set to number to ensure value is not parsed to a string -->
 				<input
 					type="range"
 					id="rating-filter"
 					min="0"
 					max="5"
 					value="0"
-					v-model="inputs.minRating"
+					v-model.number="inputs.minRating"
 				/>
 			</div>
 			<div class="input-group">
 				<label for="sort-filter">Sort by</label>
 				<select id="sort-filter" v-model="inputs.sortBy">
 					<option value="name">Name</option>
-					<option value="date">Release</option>
+					<option value="release">Release</option>
 					<option value="rating">Rating</option>
 				</select>
 			</div>

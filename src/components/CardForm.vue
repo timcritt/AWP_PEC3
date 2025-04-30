@@ -115,6 +115,7 @@ export default {
 			</div>
 			<div class="form-group">
 				<label for="tags">Tags (comma-separated):</label>
+				<!-- Careful! v-model should be connected to a string, not the tags array of the show object -->
 				<input type="text" id="tags" v-model.trim="tagsInput" />
 			</div>
 			<div class="form-group">
